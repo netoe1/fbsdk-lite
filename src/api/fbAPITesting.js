@@ -7,6 +7,8 @@ const accessToken =
 const accountId = "act_1081166167137515";
 const api = bizSdk.FacebookAdsApi.init(accessToken);
 
+
+
 function getLastMonthRange() {
   const now = new Date();
   const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
