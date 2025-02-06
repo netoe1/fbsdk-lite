@@ -1,44 +1,62 @@
-const bizSdk = require("facebook-nodejs-business-sdk");
+const prefix = require("../modules/prefix");
+const adsSDK = require("facebook-nodejs-business-sdk");
+const AdAccount = adsSDK.AdAccount;
+const Business = adsSDK.Business;
+const FacebookAdsApi = adsSDK.FacebookAdsApi;
 
-class fbLiteAPI {
+class FBLiteAPI {
   #accessToken;
   #adAccountId;
   #businessId;
+  #inited;
+  #businessManagerData;
+  #adAccountData;
+  #api;
 
-  constructor(_accessToken, _adAccountId, _businessId) {
-    if (!_accessToken) {
-      throw new Error("[fb-err]: Invalid token.");
-    }
-
-    if (!_adAccountId) {
-      throw new Error("[fb-err]: Invalid ad account.");
-    }
-
-    if (!_businessId) {
-      throw new Error("[fb-err]: Invalid business id");
-    }
-
-    this.#accessToken = _accessToken;
-    this.#adAccountId = _adAccountId;
-    this.#businessId = _businessId;
+  constructor() {
+    this.#inited = true;
+    this.#adAccountId = undefined;
+    this.#businessId = undefined;
+    this.#accessToken = undefined;
+    this.#businessManagerData = undefined;
+    this.#adAccountData = undefined;
+    this.api = undefined;
   }
 
-  // Função para conectar ao API
-  async connectUserToApi() {
-    if (!this.#accessToken || !this.#adAccountId || !this.#businessId) {
-      throw new Error("[fbsdk-err]: Invalid parameters.");
+  async authDataAPI({ accessToken, adAccountId, businessId }) {
+    if (!this.#inited) {
+      throw new Error(
+        `${prefix.getPrefixByState("err")} Please, create the object.`
+      );
     }
 
-    bizSdk.FacebookAdsApi.init(this.#accessToken);
-    const bm = new bizSdk.Business(this.#businessId); // Aqui, usamos o businessId
-    const ac = new bizSdk.AdAccount(this.#adAccountId); // Aqui, usamos o adAccountId
-    console.log("Conectado ao Business Manager e conta de anúncios");
+    if (!accessToken || !adAccountId || !businessId) {
+      throw new Error(
+        `${prefix.getPrefixByState("err")} Invalid parameters in authDataAPI().`
+      );
+    }
+
+    this.#accessToken = accessToken;
+    this.#adAccountId = "act_" + adAccountId;
+    this.#businessId = businessId;
+
+    this.#api = FacebookAdsApi.init(this.#accessToken);
+    this.#adAccountData = new AdAccount(this.#adAccountId);
+    this.#businessManagerData = new Business(this.#businessId);
+
+    if (!accessToken || !adAccountId || !businessId) {
+      throw new Error(
+        `${prefix.getPrefixByState(
+          "err"
+        )} Error while setting data to Marketing API.`
+      );
+    }
+
+    console.log(`${prefix.getPrefixByState("success")} Successfull load.`);
   }
 
-  // Função para obter insights das campanhas
-  async getCampaignInsights(since, until, limit) {
+  async getCampaignWithInsights({ since, until, limit }) {
     try {
-      const account = new bizSdk.AdAccount(this.#adAccountId);
       const fields = [
         "id",
         "name",
@@ -48,70 +66,68 @@ class fbLiteAPI {
         "updated_time",
       ];
       const params = { limit: limit };
-
-      const campaigns = await account.getCampaigns(fields, params);
-
+      const campaigns = await this.#adAccountData.getCampaigns(fields, params);
       if (campaigns.length === 0) {
         console.log("Nenhuma campanha encontrada.");
         return;
       }
+
       console.log(`----------PERÍODO---------`);
-      console.log(`Buscando insights de ${since} a ${until}`);
+      console.log(`Buscando insights de ${since} à ${until}!`);
 
-      // Itera sobre as campanhas e obtém os insights
       for (const campaign of campaigns) {
-        console.log(`Campaign ID: ${campaign.id} - ${campaign.name}`);
-
-        // Obter insights da campanha
-        const insights = await campaign.getInsights(
-          ["campaign_id", "impressions", "clicks", "spend", "ctr"], // Campos dos insights
-          { time_range: { since, until } } // Intervalo de tempo
+        console.log(
+          `Campaign ID: ${campaign.id} - ${campaign.name} - ${campaign.objective}`
         );
 
-        // Verifica se o objeto de insights existe e contém dados
+        const insights = await campaign.getInsights(
+          ["campaign_id", "impressions", "clicks", "spend", "ctr"],
+          { time_range: { since, until } }
+        );
+
         if (insights && insights.length > 0) {
-          const insight = insights[0]._data; // Acessa os dados da primeira campanha
-          // Convertendo valores para os tipos corretos
+          const insight = insights[0]._data;
           const impressions = insight.impressions
             ? parseInt(insight.impressions, 10)
             : "N/A";
           const clicks = insight.clicks ? parseInt(insight.clicks, 10) : "N/A";
           const spend = insight.spend
             ? parseFloat(insight.spend).toFixed(2)
-            : "N/A"; // Formatando o gasto com 2 casas decimais
+            : "N/A";
           const ctr = insight.ctr
-            ? (parseFloat(insight.ctr) * 100).toFixed(2) + "%" // Formatando CTR como percentual
+            ? parseFloat(insight.ctr).toFixed(2) + "%"
             : "N/A";
 
-          // Exibindo as informações
-          console.log(`----------DADOS---------`);
-          console.log(`Impressões: ${impressions}`);
-          console.log(`Cliques: ${clicks}`);
-          console.log(`Gasto: R$ ${spend}`);
+          console.log(`----------INSIGHTS---------`);
+          console.log(`Impressions: ${impressions}`);
+          console.log(`Clicks: ${clicks}`);
+          console.log(`Cost: $ ${spend}`);
           console.log(`CTR: ${ctr}`);
           console.log(`----------FIM---------`);
-        } else {
-          console.log(
-            "Erro: Dados de insights não encontrados ou formato inválido."
-          );
-          //console.log(insights); // Imprime a resposta completa da API para análise
         }
       }
     } catch (error) {
-      console.error("Erro ao buscar insights:", error);
+      console.log(error);
     }
+  }
+
+  async #resetObjectBuffer() {
+    this.#accessToken = undefined;
+    this.#adAccountId = undefined;
+    this.#businessId = undefined;
+    this.#adAccountData = undefined;
+    this.BM = undefined;
+    this.api = undefined;
   }
 }
 
-// Instanciação da classe FBsdkAPI com os parâmetros corretos
-const fb = new fbLiteAPI(
-  "EAAJFpu1RqmMBOZBUISTzDgcvO70m8qqIWILlXFoaCllM9JAcYZCEVuiOkCxSHMd2wIAd9PT62ZCwCSbbL3x4T56YhmmbXOJZCVN9o4iqInMiZAHYsA7f6mZBWlUFCmdJNRvVqGQK0zg3gOw654hhQSS1Yu0qzTBtxHI9s1DqcEUt84EjhePaBIoZCD6BsDM3jwL",
-  "act_478779427593587",
-  "1054980051803328"
-);
+const fbapi = new FBLiteAPI();
+fbapi.authDataAPI({
+  accessToken:
+    "EAAJFpu1RqmMBOZCApg08Yu1oJHLYh4ulXrCJjFh43cYtgkEyaCPuVVQ1IN1rwOYH35JBnF8vl7T8xFrWvixTZBoKUTxkoacVuEboM11mdO2ZAV4EG36l8oAxaVZBr6RX3D8c6xQGRvJExCyty1qo936PToPgbEFMZBdLeocABuEXZCbUJDQfQ40Ic12lwpnNyy",
+  adAccountId: "1081166167137515",
+  businessId: "1594987141102876",
+});
+fbapi.getCampaignWithInsights("2024-09-01", "2025-01-01", 50);
 
-// Conectar ao Facebook Ads API
-fb.connectUserToApi();
-
-// Obter os insights das campanhas
-fb.getCampaignInsights("2025-01-01", "2025-02-01", 10);
+module.exports = { FBLiteAPI };

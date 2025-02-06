@@ -3,11 +3,9 @@ const bizSdk = require("facebook-nodejs-business-sdk");
 const AdAccount = bizSdk.AdAccount;
 const Campaign = bizSdk.Campaign;
 const accessToken =
-  "EAAJFpu1RqmMBO21CoRscqn0VWfp7W8l2lAFAv24RpTFMS85im18drIZAhsnm2RMZAuoZAwKbVILEIuGf3QnE2lhpgDfZAjUlpKynVpMVPktUy6MywVk5TfDBjDsGEDLgXCFtPULnMSanUE9Lwe0QRtVKSN232WUzQAbsvEtGzFFtVPCqksBvt7XNACcVpsIP";
+  "EAAJFpu1RqmMBOZCApg08Yu1oJHLYh4ulXrCJjFh43cYtgkEyaCPuVVQ1IN1rwOYH35JBnF8vl7T8xFrWvixTZBoKUTxkoacVuEboM11mdO2ZAV4EG36l8oAxaVZBr6RX3D8c6xQGRvJExCyty1qo936PToPgbEFMZBdLeocABuEXZCbUJDQfQ40Ic12lwpnNyy";
 const accountId = "act_1081166167137515";
 const api = bizSdk.FacebookAdsApi.init(accessToken);
-
-
 
 function getLastMonthRange() {
   const now = new Date();
