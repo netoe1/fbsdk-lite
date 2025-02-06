@@ -1,10 +1,9 @@
-const dotenv = require("dotenv").config();
 const bizSdk = require("facebook-nodejs-business-sdk");
 const AdAccount = bizSdk.AdAccount;
 const Campaign = bizSdk.Campaign;
 const accessToken =
-  "EAAJFpu1RqmMBOZCApg08Yu1oJHLYh4ulXrCJjFh43cYtgkEyaCPuVVQ1IN1rwOYH35JBnF8vl7T8xFrWvixTZBoKUTxkoacVuEboM11mdO2ZAV4EG36l8oAxaVZBr6RX3D8c6xQGRvJExCyty1qo936PToPgbEFMZBdLeocABuEXZCbUJDQfQ40Ic12lwpnNyy";
-const accountId = "act_1081166167137515";
+  "EAAJFpu1RqmMBO2xurLvZBZARgOqOx5OQpPJZBUZC1pheILLUZCdToFGYm015Hx43QZBfIvv0VTQu3oaYVqt7JA1IZBZBU77qZAeXuq9sTD2gAJ3bKCwaPlD1PeZAp4DlgpDMU3tr7ypQHR0AWIbZCvGh0y1Tlda9AkEb8yk1iReM9j0I1Ve2r0dZApfc7CnytqzWBZCmz";
+const accountId = "act_1054980051803328";
 const api = bizSdk.FacebookAdsApi.init(accessToken);
 
 function getLastMonthRange() {
@@ -56,28 +55,34 @@ async function getCampaignInsights() {
         { time_range: { since, until } } // Intervalo de tempo do mês passado
       );
 
-    
-
-     // console.log(insights);
+      // console.log(insights);
       // Verifica se o objeto de insights existe e contém dados
       if (insights && insights.length > 0) {
-        const insight = insights[0]._data;  // Acessa os dados da primeira campanha
+        const insight = insights[0]._data; // Acessa os dados da primeira campanha
         // Convertendo valores para os tipos corretos
-        const impressions = insight.impressions ? parseInt(insight.impressions, 10) : 'N/A';
-        const clicks = insight.clicks ? parseInt(insight.clicks, 10) : 'N/A';
-        const spend = insight.spend ? parseFloat(insight.spend).toFixed(2) : 'N/A';  // Formatando o gasto com 2 casas decimais
-        const ctr = insight.ctr ? (parseFloat(insight.ctr) * 100).toFixed(2) + '%' : 'N/A'; // Formatando CTR como percentual
-    
+        const impressions = insight.impressions
+          ? parseInt(insight.impressions, 10)
+          : "N/A";
+        const clicks = insight.clicks ? parseInt(insight.clicks, 10) : "N/A";
+        const spend = insight.spend
+          ? parseFloat(insight.spend).toFixed(2)
+          : "N/A"; // Formatando o gasto com 2 casas decimais
+        const ctr = insight.ctr
+          ? (parseFloat(insight.ctr) * 100).toFixed(2) + "%"
+          : "N/A"; // Formatando CTR como percentual
+
         // Exibindo as informações
         console.log(`Impressões: ${impressions}`);
         console.log(`Cliques: ${clicks}`);
         console.log(`Gasto: R$ ${spend}`);
         console.log(`CTR: ${ctr}`);
-        console.log('---');
-    } else {
-        console.log('Erro: Dados de insights não encontrados ou formato inválido.');
-        console.log(insights);  // Imprime a resposta completa da API para análise
-    }
+        console.log("---");
+      } else {
+        console.log(
+          "Erro: Dados de insights não encontrados ou formato inválido."
+        );
+        console.log(insights); // Imprime a resposta completa da API para análise
+      }
     }
   } catch (error) {
     console.error("Erro ao buscar insights:", error);
