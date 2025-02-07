@@ -13,7 +13,3 @@ Em primeiro momento, iremos utilizar o JS como referência, para desenvolvermos 
 
 # Como participar:
 Caso você esteja interessado em participar, me envie um email para elynetobr@gmail.com, deixe bem claro sua intenção e irei conversar com você sobre; toda ajuda é bem-vinda. 
-
-# Licença e exigências:
- Minha única exigência, é inserir os nomes dos criadores e fundadores do projeto, além de não ser permitido patentear e realizar uso comercial.
-Gostaria também de inserir o nome de todos os possíveis colaboradores, que provavelmente irão nos ajudar no futuro.
