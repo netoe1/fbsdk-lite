@@ -37,7 +37,7 @@ class FBLiteAPI {
     }
 
     this.#accessToken = accessToken;
-    this.#adAccountId = "act_" + adAccountId;
+    this.#adAccountId = "act_" + adAccountId.toString();
     this.#businessId = businessId;
 
     this.#api = FacebookAdsApi.init(this.#accessToken);
@@ -55,7 +55,7 @@ class FBLiteAPI {
     console.log(`${prefix.getPrefixByState("success")} Successfull load.`);
   }
 
-  async getCampaignWithInsights({ since, until, limit }) {
+  async getCampaign({ since, until, limit }) {
     try {
       const fields = [
         "id",
@@ -111,6 +111,7 @@ class FBLiteAPI {
     }
   }
 
+  async;
   async #resetObjectBuffer() {
     this.#accessToken = undefined;
     this.#adAccountId = undefined;
@@ -124,10 +125,10 @@ class FBLiteAPI {
 const fbapi = new FBLiteAPI();
 fbapi.authDataAPI({
   accessToken:
-    "EAAJFpu1RqmMBOZCApg08Yu1oJHLYh4ulXrCJjFh43cYtgkEyaCPuVVQ1IN1rwOYH35JBnF8vl7T8xFrWvixTZBoKUTxkoacVuEboM11mdO2ZAV4EG36l8oAxaVZBr6RX3D8c6xQGRvJExCyty1qo936PToPgbEFMZBdLeocABuEXZCbUJDQfQ40Ic12lwpnNyy",
-  adAccountId: "1081166167137515",
-  businessId: "1594987141102876",
+    "EABZCEORrExZC8BOwYKR77hqRSW5G4BTP48cZBo0SqFVNc7INZCqGydQHLMKCz0ZCFtuw2npXA7wh1Bu92YZBCMB0tpV461Oymh7ZCgyiWg3gnWS8NDO06Q0FHabiiRR8x8ZANNwLfqvQctwISEZCLfqLqBI2AxDPU2iwnGjsb8TX31ihfo4xYUg1KFFlZCLBPA34fq",
+  adAccountId: "516102277856497",
+  businessId: "1054980051803328",
 });
-fbapi.getCampaignWithInsights("2024-09-01", "2025-01-01", 50);
+fbapi.getCampaign("", "", 50);
 
 module.exports = { FBLiteAPI };
