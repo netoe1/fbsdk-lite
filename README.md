@@ -11,4 +11,4 @@ tornando-a mais previsível para os desenvolvedores. Como dito anteriormente, n�
 Em primeiro momento, iremos utilizar o JS como referência, para desenvolvermos e tornar a API funcional; porém, depois pretendemos realizar revisão de código e portá-lo de uma forma interessante para o TS.
 
 # Como participar:
-Caso você esteja interessado em participar, me envie um email para elynetobr@gmail.com, deixe bem claro sua intenção e irei conversar com você sobre; toda ajuda é bem-vinda. 
+Caso você esteja interessado em participar, me envie um email para elynetobr@gmail.com, deixe bem claro sua intenção e irei conversar com você sobre; toda ajuda é bem-vinda. Nesse estágio de desenvolvimento, ainda não estamos aceitando pessoas.
