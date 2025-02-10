@@ -57,6 +57,16 @@ class FBLiteAPI {
 
   async getCampaign({ since, until, limit }) {
     try {
+      if (!since || !until || !limit) {
+        throw new Error(
+          `${prefix.getPrefixByState(
+            "err"
+          )} The parameters 'since','until','limit' must be defined.`
+        );
+      }
+
+      
+
       const fields = [
         "id",
         "name",
@@ -111,7 +121,6 @@ class FBLiteAPI {
     }
   }
 
-  async;
   async #resetObjectBuffer() {
     this.#accessToken = undefined;
     this.#adAccountId = undefined;
@@ -129,6 +138,6 @@ fbapi.authDataAPI({
   adAccountId: "516102277856497",
   businessId: "1054980051803328",
 });
-fbapi.getCampaign("", "", 50);
+fbapi.getCampaign({ since: "", until: "2025-02-10", limit: 30 });
 
 module.exports = { FBLiteAPI };
