@@ -4,6 +4,15 @@ const AdAccount = adsSDK.AdAccount;
 const Business = adsSDK.Business;
 const FacebookAdsApi = adsSDK.FacebookAdsApi;
 
+
+
+class AdAccountData{
+
+};
+
+class BusinessManagerData{
+  
+};
 class FBLiteAPI {
   #accessToken;
   #adAccountId;
@@ -21,6 +30,24 @@ class FBLiteAPI {
     this.#businessManagerData = undefined;
     this.#adAccountData = undefined;
     this.api = undefined;
+  }
+
+  async syncAPI(app_access_token) {
+    if (!app_access_token) {
+      throw new Error(
+        `${prefix.getPrefixByState("err")} You must define your access token.`
+      );
+    }
+
+    this.#api = FacebookAdsApi.init(app_access_token);
+
+    if (!this.#api) {
+      throw new Error(
+        `${prefix.getPrefixByState("err")} Invalid access token!`
+      );
+    }
+
+    this.#accessToken = app_access_token;
   }
 
   async authDataAPI({ accessToken, adAccountId, businessId }) {
@@ -64,8 +91,6 @@ class FBLiteAPI {
           )} The parameters 'since','until','limit' must be defined.`
         );
       }
-
-      
 
       const fields = [
         "id",
@@ -129,6 +154,15 @@ class FBLiteAPI {
     this.BM = undefined;
     this.api = undefined;
   }
+
+
+  #isInited(){
+    if(this.#inited){
+      return true;
+    }
+    return false;
+  }
+
 }
 
 const fbapi = new FBLiteAPI();
