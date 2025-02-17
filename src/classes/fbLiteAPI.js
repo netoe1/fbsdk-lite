@@ -4,15 +4,61 @@ const AdAccount = adsSDK.AdAccount;
 const Business = adsSDK.Business;
 const FacebookAdsApi = adsSDK.FacebookAdsApi;
 
+class APIConfig{
+  #accessToken
+  #inited
 
+  constructor(accessToken){
+    this.#inited = true;
+    this.#accessToken = accessToken;
+  }
 
-class AdAccountData{
+  authAPI(accessToken){
+    if(!accessToken){
+      throw new Error(`${prefix.getPrefixByState('err')} You didn't input acessToken.`);
+    }
+    const ret = adsSDK.FacebookAdsApi.init(accessToken.toString());
 
+    if(!ret){
+      throw new Error(`${prefix.getPrefixByState('err')} Error while auth api.`);
+    }
+
+    this.#accessToken = accessToken;
+  }
 };
 
-class BusinessManagerData{
+class BusinessManager{
+  #apiObject
+  #bmId
+  #businessData;
+
+  constructor(bmId,apiObject){
+    this.#bmId = bmId;
+    this.#apiObject = apiObject;
+  }
+
+  set setBusiness(bmId){
+    if(!bmId){
+      throw new Error(`${prefix.getPrefixByState('err')} Error while set bmId.`);
+    }
+
+    const setBusiness = ()=>{
+      return new adsSDK.Business(bmId);
+
+    }
+
+    if(!setBusiness){
+      throw new Error(`${prefix.getPrefixByState('err')} Error on try to set business`);
+    }
+  }
   
+  get allAdAccounts(){
+    
+  }
 };
+
+
+
 class FBLiteAPI {
   #accessToken;
   #adAccountId;
