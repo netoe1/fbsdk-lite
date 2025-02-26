@@ -43,7 +43,7 @@ async function getCampaignInsights() {
 
     // Obter o intervalo do mês passado
     const { since, until } = getLastMonthRange();
-    console.log(`Buscando insights de ${since} a ${until}`);
+   // console.log(`Buscando insights de ${since} a ${until}`);
 
     // Itera sobre as campanhas e obtém os insights
     for (const campaign of campaigns) {
